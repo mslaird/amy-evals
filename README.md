@@ -134,15 +134,13 @@ Corrections below for why the second one exists.
 
 ## Honest limits
 
-**The forbidden-phrase list is a strict subset of the rule it encodes.** The prompt ends its ban with
-*"or anything implying you hold a calendar or can send a text"* — a semantic catch-all that substring
-matching cannot enforce. The list also broadens `"I'll text you the link"` to `"i'll text you"` and
-adds `"i will text you"`, so two of the seven entries are deliberate paraphrases rather than literal
-quotes. A novel phrasing that implies calendar access passes this suite. That is the honest cost of
-choosing deterministic checks, and the reason the escalation path is judged on state rather than
-language.
-
-
+- **The forbidden-phrase list is a strict subset of the rule it encodes.** The prompt ends its ban
+  with *"or anything implying you hold a calendar or can send a text"* — a semantic catch-all that
+  substring matching cannot enforce. The list also broadens `"I'll text you the link"` to
+  `"i'll text you"` and adds `"i will text you"`, so two of the seven entries are deliberate
+  paraphrases rather than literal quotes. A novel phrasing that implies calendar access passes this
+  suite. That is the honest cost of deterministic checks, and the reason the escalation path is
+  judged on state rather than language.
 - **The fixtures are synthetic.** I wrote them to encode the rules in the prompt. They are not real
   customer calls, contain no real names or numbers, and the metrics table above is therefore a
   demonstration of the harness — not a measurement of production traffic.
