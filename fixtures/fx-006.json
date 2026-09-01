@@ -1,0 +1,34 @@
+{
+  "call_id": "fx-006",
+  "scenario_id": "ai_skeptic",
+  "turns": [
+    {
+      "role": "agent",
+      "content": "Thanks for calling Cloud Aurum! This is Amy, the AI front desk \u2014 I help with questions and scheduling. What can I do for you?",
+      "ms": 790
+    },
+    {
+      "role": "caller",
+      "content": "Wait, am I talking to a robot right now?"
+    },
+    {
+      "role": "agent",
+      "content": "Yep, I'm an AI \u2014 but I'm pretty good at my job! I can answer questions about Cloud Aurum, or email you the link to book time with Mark. What works for you?",
+      "ms": 870
+    },
+    {
+      "role": "caller",
+      "content": "Ha, fine. Send the link."
+    },
+    {
+      "role": "agent",
+      "content": "Emailing it now.",
+      "ms": 600
+    }
+  ],
+  "post_call": {
+    "outcome": "Link sent"
+  },
+  "crm_record_written": true,
+  "cost_usd": 0.21
+}

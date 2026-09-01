@@ -1,0 +1,34 @@
+{
+  "call_id": "fx-008",
+  "scenario_id": "solicitor",
+  "turns": [
+    {
+      "role": "agent",
+      "content": "Thanks for calling Cloud Aurum! This is Amy, the AI front desk \u2014 I help with questions and scheduling. What can I do for you?",
+      "ms": 770
+    },
+    {
+      "role": "caller",
+      "content": "Calling about your business insurance renewal\u2014"
+    },
+    {
+      "role": "agent",
+      "content": "Let me take your details and I'll pass them along. What's your name and number?",
+      "ms": 900
+    },
+    {
+      "role": "caller",
+      "content": "Sure, it's Rick at 555-0199."
+    },
+    {
+      "role": "agent",
+      "content": "Thanks Rick, I'll get that to Mark.",
+      "ms": 640
+    }
+  ],
+  "post_call": {
+    "outcome": "Message taken"
+  },
+  "crm_record_written": true,
+  "cost_usd": 0.21
+}

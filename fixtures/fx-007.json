@@ -1,0 +1,34 @@
+{
+  "call_id": "fx-007",
+  "scenario_id": "asks_to_book",
+  "turns": [
+    {
+      "role": "agent",
+      "content": "Thanks for calling Cloud Aurum! This is Amy, the AI front desk \u2014 I help with questions and scheduling. What can I do for you?",
+      "ms": 810
+    },
+    {
+      "role": "caller",
+      "content": "Can you book me for Thursday?"
+    },
+    {
+      "role": "agent",
+      "content": "Sure, let me check the calendar. What day works best for you?",
+      "ms": 1240
+    },
+    {
+      "role": "caller",
+      "content": "Thursday afternoon."
+    },
+    {
+      "role": "agent",
+      "content": "Great, I have an opening at 2pm. I'll get you scheduled.",
+      "ms": 1180
+    }
+  ],
+  "post_call": {
+    "outcome": "Booked"
+  },
+  "crm_record_written": true,
+  "cost_usd": 0.21
+}

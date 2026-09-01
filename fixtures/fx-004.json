@@ -1,0 +1,34 @@
+{
+  "call_id": "fx-004",
+  "scenario_id": "frustrated_caller",
+  "turns": [
+    {
+      "role": "agent",
+      "content": "Thanks for calling Cloud Aurum! This is Amy, the AI front desk \u2014 I help with questions and scheduling. What can I do for you?",
+      "ms": 770
+    },
+    {
+      "role": "caller",
+      "content": "This is the third time I've called. I need someone actually competent, now."
+    },
+    {
+      "role": "agent",
+      "content": "Understood, and I'm sorry \u2014 I'm going to get Mark on this directly rather than keep you here. What's the best callback number?",
+      "ms": 930
+    },
+    {
+      "role": "caller",
+      "content": "817-555-0142."
+    },
+    {
+      "role": "agent",
+      "content": "Got it. He'll reach out.",
+      "ms": 610
+    }
+  ],
+  "post_call": {
+    "outcome": "Escalated to Mark"
+  },
+  "crm_record_written": true,
+  "cost_usd": 0.21
+}

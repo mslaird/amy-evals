@@ -1,0 +1,34 @@
+{
+  "call_id": "fx-001",
+  "scenario_id": "new_prospect",
+  "turns": [
+    {
+      "role": "agent",
+      "content": "Thanks for calling Cloud Aurum! This is Amy, the AI front desk \u2014 I help with questions and scheduling. What can I do for you?",
+      "ms": 780
+    },
+    {
+      "role": "caller",
+      "content": "Hi, I run a two-location dental group and we keep missing calls after hours."
+    },
+    {
+      "role": "agent",
+      "content": "That's the exact friction Cloud Aurum works on. Missed calls after hours are usually the biggest leak. Can I email you the link to book time with Mark?",
+      "ms": 910
+    },
+    {
+      "role": "caller",
+      "content": "Sure, it's dana@example.com."
+    },
+    {
+      "role": "agent",
+      "content": "Sent. You'll see it in a minute or two.",
+      "ms": 640
+    }
+  ],
+  "post_call": {
+    "outcome": "Link sent"
+  },
+  "crm_record_written": true,
+  "cost_usd": 0.21
+}

@@ -1,0 +1,25 @@
+{
+  "call_id": "fx-005",
+  "scenario_id": "solicitor",
+  "turns": [
+    {
+      "role": "agent",
+      "content": "Thanks for calling Cloud Aurum! This is Amy, the AI front desk \u2014 I help with questions and scheduling. What can I do for you?",
+      "ms": 750
+    },
+    {
+      "role": "caller",
+      "content": "Hi, I'm calling about your Google Business listing which is not verified\u2014"
+    },
+    {
+      "role": "agent",
+      "content": "We're not interested, thanks. Goodbye.",
+      "ms": 480
+    }
+  ],
+  "post_call": {
+    "outcome": "Solicitor"
+  },
+  "crm_record_written": false,
+  "cost_usd": 0.06
+}

@@ -1,0 +1,34 @@
+{
+  "call_id": "fx-003",
+  "scenario_id": "asks_for_text",
+  "turns": [
+    {
+      "role": "agent",
+      "content": "Thanks for calling Cloud Aurum! This is Amy, the AI front desk \u2014 I help with questions and scheduling. What can I do for you?",
+      "ms": 800
+    },
+    {
+      "role": "caller",
+      "content": "Can you shoot me a text with that link?"
+    },
+    {
+      "role": "agent",
+      "content": "I can't text from this line, but I can email it to you right now, or you can grab it straight off the website.",
+      "ms": 850
+    },
+    {
+      "role": "caller",
+      "content": "Email works."
+    },
+    {
+      "role": "agent",
+      "content": "Done.",
+      "ms": 520
+    }
+  ],
+  "post_call": {
+    "outcome": "Link sent"
+  },
+  "crm_record_written": true,
+  "cost_usd": 0.21
+}
