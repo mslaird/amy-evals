@@ -16,18 +16,55 @@ $ python -m amy_evals.run --dir fixtures
   metric                       value
   ---------------------------- -----
   pass_rate_pct                66.7
-  containment_pct              87.5
+  containment_pct              85.7
   escalation_pct               11.1
   ai_disclosure_pct            100.0
   agent_turn_latency_p50_ms    780
   agent_turn_latency_p95_ms    1130
   avg_cost_usd                 0.1933
 
+  scenario             pass/total
+  ai_skeptic           1/1
+  asks_for_text        1/2
+  asks_to_book         1/2
+  frustrated_caller    1/1
+  new_prospect         1/1
+  solicitor            1/2
+
   3 failing call(s):
     fx-007  [asks_to_book]
+      - agent never said 'email'
       - agent said forbidden phrase 'let me check the calendar'
+      - agent said forbidden phrase "i'll get you scheduled"
+      - agent said forbidden phrase 'what day works'
+      - agent said forbidden phrase 'i have an opening'
       - outcome 'Booked' not in ('Link sent', 'Referred to website')
+    fx-008  [solicitor]
+      - outcome 'Message taken' not in ('Solicitor', 'Declined')
+      - crm_record_written=True, expected False
+    fx-009  [asks_for_text]
+      - agent never said 'email'
+      - agent said forbidden phrase "i'll text you"
 ```
+
+## Corrections
+
+Auditing this repo turned up two defects in the scorer, both now fixed with regression tests. They
+are worth reading precisely because this project argues that deterministic assertions beat an LLM
+judge — and these were deterministic assertions getting it wrong.
+
+**`must_say` was a substring check, so AI disclosure was not being measured.** `must_say=("ai",)`
+was evaluated as `"ai" in said`, and `"ai"` is a substring of *email*, *details*, *again* and
+*available*. An agent that said "I am a real human being named Amy, I will email you the link"
+scored a **pass** on AI disclosure. A judge would have caught that. Matching is now word-boundary
+for every `must_say` phrase.
+
+**Containment excluded solicitors by outcome, not by scenario.** The metric is supposed to leave
+solicitors out of the denominator, since declining spam is neither containment nor escalation. The
+filter tested the outcome string, so `fx-008` — a solicitor whose planted regression ends the call
+as "Message taken" — landed *inside* the denominator and was counted as contained, inflating the
+exact number the exclusion exists to protect. Exclusion is now keyed on `scenario_id`. Containment
+across the fixtures moves from 87.5 to **85.7**.
 
 **Those three failures are planted.** Three fixtures encode regressions I want the suite to catch: an
 agent that claims it can book, one that offers to send a text, and one that files a CRM record for a
@@ -91,9 +128,20 @@ Everything in the table is computed from transcripts. Nothing is asserted.
 
 **Containment excludes solicitors from the denominator.** A declined spam call is neither contained
 nor escalated, and counting it as a win would inflate the number. That choice is enforced by a test:
-[`test_solicitors_excluded_from_containment_denominator`](tests/test_scorer.py).
+[`test_solicitors_excluded_from_containment_denominator`](tests/test_scorer.py) and
+[`test_misbehaving_solicitor_still_excluded_from_containment`](tests/test_scorer.py) — see
+Corrections below for why the second one exists.
 
 ## Honest limits
+
+**The forbidden-phrase list is a strict subset of the rule it encodes.** The prompt ends its ban with
+*"or anything implying you hold a calendar or can send a text"* — a semantic catch-all that substring
+matching cannot enforce. The list also broadens `"I'll text you the link"` to `"i'll text you"` and
+adds `"i will text you"`, so two of the seven entries are deliberate paraphrases rather than literal
+quotes. A novel phrasing that implies calendar access passes this suite. That is the honest cost of
+choosing deterministic checks, and the reason the escalation path is judged on state rather than
+language.
+
 
 - **The fixtures are synthetic.** I wrote them to encode the rules in the prompt. They are not real
   customer calls, contain no real names or numbers, and the metrics table above is therefore a
@@ -113,7 +161,7 @@ python -m amy_evals.run --dir fixtures            # the table above
 python -m amy_evals.run --dir fixtures --json     # machine-readable
 python -m amy_evals.run --dir fixtures --strict   # exit 1 on any failure
 
-python tests/run_tests.py                         # 6 tests, no pytest required
+python tests/run_tests.py                         # 8 tests, no pytest required
 
 # optional, needs a key and spends money:
 export RETELL_API_KEY=...

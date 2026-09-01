@@ -13,6 +13,7 @@ Where a judgement genuinely needs semantics (was the caller actually
 frustrated?), that lives in the transcript's labelled metadata, supplied by the
 scenario definition, not inferred at scoring time.
 """
+import re
 from dataclasses import dataclass, field
 from .scenarios import BY_ID
 
@@ -37,6 +38,16 @@ class CallResult:
     @property
     def failures(self) -> list:
         return [c for c in self.checks if not c.passed]
+
+
+def _says_word(haystack: str, phrase: str) -> bool:
+    """Word-boundary containment.
+
+    `"ai" in "i will email you"` is True, which made the AI-disclosure check
+    pass for an agent that never disclosed. Every must_say phrase is matched on
+    word boundaries instead.
+    """
+    return re.search(rf"\b{re.escape(phrase.lower())}\b", haystack) is not None
 
 
 def _agent_text(transcript: dict) -> str:
@@ -68,8 +79,8 @@ def score_call(transcript: dict) -> CallResult:
     for phrase in scenario.must_say:
         checks.append(CheckResult(
             name=f"says:{phrase}",
-            passed=phrase.lower() in said,
-            detail="" if phrase.lower() in said else f"agent never said {phrase!r}",
+            passed=_says_word(said, phrase),
+            detail="" if _says_word(said, phrase) else f"agent never said {phrase!r}",
         ))
 
     for phrase in scenario.must_not_say:
@@ -129,10 +140,13 @@ def aggregate(results, transcripts):
     # Containment = resolved without handing off to a human. Solicitors are
     # excluded from the denominator: declining spam is neither containment nor
     # escalation, and counting it as a "win" would inflate the number.
-    non_solicitor = [o for o in outcomes if o not in ("Solicitor", "Declined")]
+    non_solicitor = [
+        o for t, o in zip(transcripts, outcomes)
+        if t.get("scenario_id") != "solicitor" and o not in ("Solicitor", "Declined")
+    ]
     contained = sum(1 for o in non_solicitor if o != "Escalated to Mark")
 
-    disclosed = sum(1 for t in transcripts if "ai" in _agent_text(t))
+    disclosed = sum(1 for t in transcripts if _says_word(_agent_text(t), "ai"))
 
     latencies = [turn["ms"] for t in transcripts for turn in t.get("turns", [])
                  if turn.get("role") == "agent" and isinstance(turn.get("ms"), int)]

@@ -43,6 +43,33 @@ def test_solicitors_excluded_from_containment_denominator():
     assert m["escalation_pct"] == 50.0        # 1 of 2 total calls
 
 
+def test_misbehaving_solicitor_still_excluded_from_containment():
+    """The regression the outcome-based filter missed.
+
+    fx-008 is a solicitor whose planted failure ends the call as "Message taken".
+    Excluding by outcome string let it into the containment denominator and
+    scored it as a win -- inflating exactly the metric the exclusion exists to
+    protect. Exclusion is keyed on scenario_id, so a solicitor stays out no
+    matter how the call ends.
+    """
+    ts = [load("fx-004"), load("fx-008")]     # one escalation, one misbehaving solicitor
+    m = aggregate([score_call(t) for t in ts], ts)
+    assert m["containment_pct"] == 0.0        # fx-008 must not count as contained
+
+
+def test_ai_disclosure_requires_the_word_not_a_substring():
+    """"ai" is a substring of "email", "details" and "again".
+
+    A bare containment check passed the disclosure requirement for an agent that
+    never disclosed. Matching is word-boundary.
+    """
+    from amy_evals.scorer import _says_word
+    assert not _says_word("i will email you the details", "ai")
+    assert not _says_word("let me say that again", "ai")
+    assert _says_word("i am an ai assistant", "ai")
+    assert _says_word("i will email you", "email")
+
+
 def test_latency_percentiles_come_from_transcripts():
     ts = [load(c) for c in ("fx-001", "fx-002", "fx-003")]
     m = aggregate([score_call(t) for t in ts], ts)
