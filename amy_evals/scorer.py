@@ -140,6 +140,11 @@ def aggregate(results, transcripts):
     # Containment = resolved without handing off to a human. Solicitors are
     # excluded from the denominator: declining spam is neither containment nor
     # escalation, and counting it as a "win" would inflate the number.
+    # Both conditions are load-bearing, and they catch different things. The
+    # scenario_id test excludes a solicitor call however it ends -- that is the
+    # regression the outcome-only version missed. The outcome test still excludes
+    # a call from any other scenario that turned out to be a solicitor once Amy
+    # heard it, which is the ordinary case and is not knowable from the label.
     non_solicitor = [
         o for t, o in zip(transcripts, outcomes)
         if t.get("scenario_id") != "solicitor" and o not in ("Solicitor", "Declined")

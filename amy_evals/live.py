@@ -6,7 +6,7 @@ the phone number is still bound to the right agent. It cannot tell you whether
 the line actually answers, or whether the agent behaved correctly once it did.
 This module closes that gap.
 
-Requires RETELL_API_KEY. Costs money per call if you use --place. Everything in
+Requires RETELL_API_KEY. Fetching real calls consumes API quota. Everything in
 scorer.py runs without this module, without a key, and without spending
 anything -- that is deliberate.
 """

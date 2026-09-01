@@ -150,7 +150,7 @@ Corrections below for why the second one exists.
 - **Real calls come back unlabelled.** `scenario_id` is the thing you are testing against, so it
   cannot be inferred from the call itself. Production calls must be labelled before scoring.
   Guessing the label would reintroduce exactly the judgement problem this design avoids.
-- **No CI.** Six tests, run them yourself.
+- **No CI.** Eight tests, run them yourself.
 
 ## Running it
 
